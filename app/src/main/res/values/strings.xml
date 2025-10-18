@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aki Studio</string>
+    
+    <!-- Navigation -->
+    <string name="nav_projects">Projects</string>
+    <string name="nav_editor">Editor</string>
+    <string name="nav_terminal">Terminal</string>
+    <string name="nav_tools">Tools</string>
+    
+    <!-- Projects Screen -->
+    <string name="projects_title">My Projects</string>
+    <string name="projects_empty_title">No projects yet</string>
+    <string name="projects_empty_subtitle">Create your first Android project</string>
+    <string name="create_project">Create Project</string>
+    <string name="project_name_hint">Project Name</string>
+    <string name="select_template">Select Template:</string>
+    <string name="template_empty_activity">Empty Activity</string>
+    <string name="template_basic_activity">Basic Activity</string>
+    <string name="template_bottom_navigation">Bottom Navigation</string>
+    
+    <!-- Editor Screen -->
+    <string name="editor_open_file">Open File</string>
+    <string name="editor_save">Save</string>
+    <string name="editor_run">Run</string>
+    <string name="editor_file_picker_title">Open File</string>
+    
+    <!-- Terminal Screen -->
+    <string name="terminal_title">Terminal</string>
+    <string name="terminal_welcome">Aki Studio Terminal v1.0.0</string>
+    <string name="terminal_help_message">Type \'help\' for available commands</string>
+    <string name="terminal_clear">Clear Terminal</string>
+    <string name="terminal_settings">Terminal Settings</string>
+    <string name="terminal_execute">Execute Command</string>
+    
+    <!-- Tools Screen -->
+    <string name="tools_title">Developer Tools</string>
+    <string name="tool_layout_inspector">Layout Inspector</string>
+    <string name="tool_layout_inspector_desc">Inspect UI layouts</string>
+    <string name="tool_logcat">LogCat</string>
+    <string name="tool_logcat_desc">View application logs</string>
+    <string name="tool_resource_manager">Resource Manager</string>
+    <string name="tool_resource_manager_desc">Manage app resources</string>
+    <string name="tool_build_analyzer">Build Analyzer</string>
+    <string name="tool_build_analyzer_desc">Analyze build performance</string>
+    <string name="tool_gradle_console">Gradle Console</string>
+    <string name="tool_gradle_console_desc">View Gradle output</string>
+    <string name="tool_device_manager">Device Manager</string>
+    <string name="tool_device_manager_desc">Manage virtual devices</string>
+    <string name="tool_profiler">Profiler</string>
+    <string name="tool_profiler_desc">Profile app performance</string>
+    <string name="tool_database_inspector">Database Inspector</string>
+    <string name="tool_database_inspector_desc">Inspect databases</string>
+    <string name="tool_network_inspector">Network Inspector</string>
+    <string name="tool_network_inspector_desc">Monitor network calls</string>
+    <string name="tool_sdk_manager">SDK Manager</string>
+    <string name="tool_sdk_manager_desc">Manage Android SDKs</string>
+    <string name="tool_apk_analyzer">APK Analyzer</string>
+    <string name="tool_apk_analyzer_desc">Analyze APK files</string>
+    <string name="tool_git_integration">Git Integration</string>
+    <string name="tool_git_integration_desc">Version control</string>
+    
+    <!-- Settings Dialog -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_dark_mode">Dark Mode</string>
+    <string name="settings_eye_protection">Eye Protection Mode</string>
+    <string name="settings_eye_protection_desc">Warm colors, reduced blue light</string>
+    <string name="settings_about">About</string>
+    <string name="settings_version">Aki Studio v1.0.0</string>
+    <string name="settings_subtitle">Mobile Android IDE</string>
+    <string name="settings_done">Done</string>
+    <string name="settings_close">Close</string>
+    
+    <!-- Common -->
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="close">Close</string>
+    <string name="open">Open</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="more_options">More options</string>
+</resources>
