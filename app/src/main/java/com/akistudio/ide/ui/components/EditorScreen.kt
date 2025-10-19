@@ -50,7 +50,6 @@ class MainActivity : ComponentActivity() {
     var showFilePicker by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // File Tab Bar
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
@@ -90,9 +89,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // Line Numbers and Code Editor
         Row(modifier = Modifier.fillMaxSize()) {
-            // Line numbers
             Column(
                 modifier = Modifier
                     .width(50.dp)
@@ -114,7 +111,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            // Code Editor
             Box(
                 modifier = Modifier
                     .fillMaxSize()
