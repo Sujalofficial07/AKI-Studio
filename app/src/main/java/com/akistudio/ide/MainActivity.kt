@@ -23,9 +23,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AkiStudioApp() {
-    var isDarkMode by remember { mutableStateOf(isSystemInDarkTheme()) }
-    var isEyeProtectionMode by remember { mutableStateOf(false) }
+    // Correctly call isSystemInDarkTheme() in a Composable context
+    val systemIsDark = isSystemInDarkTheme()
     
+    // Use the result to initialize your state
+    var isDarkMode by remember { mutableStateOf(systemIsDark) }
+    var isEyeProtectionMode by remember { mutableStateOf(false) }
+
     AkiStudioTheme(
         darkTheme = isDarkMode,
         eyeProtectionMode = isEyeProtectionMode
