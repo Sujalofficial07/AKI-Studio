@@ -1,0 +1,16 @@
+LICENSE
+CONTRIBUTING.md
+SETUP_GUIDE.md
+.gitignore
+feature_request.md
+pull_request_template.md
+bug_report.md
+android.yml
+proguard-rules.pro
+AndroidManifest.xml
+SettingsDialog.kt
+ToolsScreen.kt
+colors.xml
+themes.xml
+backup_rules.xml
+data_extraction_rules.xml
