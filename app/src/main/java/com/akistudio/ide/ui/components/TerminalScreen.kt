@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -60,7 +61,11 @@ fun TerminalScreen() {
                 )
                 Row {
                     IconButton(onClick = {
-                        terminalLines = terminalLines + TerminalLine("")
+                        terminalLines = listOf(
+                            TerminalLine("Aki Studio Terminal v1.0.0"),
+                            TerminalLine("Type 'help' for available commands"),
+                            TerminalLine("")
+                        )
                     }) {
                         Icon(Icons.Default.Clear, "Clear Terminal")
                     }
@@ -84,7 +89,7 @@ fun TerminalScreen() {
                     text = if (line.isCommand) "$ ${line.text}" else line.text,
                     style = TextStyle(
                         fontSize = 14.sp,
-                        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                        fontFamily = FontFamily.Monospace,
                         color = if (line.isCommand) 
                             MaterialTheme.colorScheme.primary 
                         else 
@@ -111,7 +116,7 @@ fun TerminalScreen() {
                     "$",
                     style = TextStyle(
                         fontSize = 14.sp,
-                        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                        fontFamily = FontFamily.Monospace,
                         color = MaterialTheme.colorScheme.primary
                     )
                 )
@@ -122,7 +127,7 @@ fun TerminalScreen() {
                     modifier = Modifier.weight(1f),
                     textStyle = TextStyle(
                         fontSize = 14.sp,
-                        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                        fontFamily = FontFamily.Monospace,
                         color = MaterialTheme.colorScheme.onSurface
                     ),
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
@@ -139,7 +144,7 @@ fun TerminalScreen() {
                                 "build" -> "Building project...\nBUILD SUCCESSFUL in 2s"
                                 "run" -> "Starting application...\nApp launched successfully"
                                 "clean" -> "Cleaning build files...\nClean completed"
-                                "version" -> "Aki Studio v1.0.0\nAndroid SDK 34"
+                                "version" -> "Aki Studio v1.0.0\nAndroid SDK 35\nKotlin 2.0.21"
                                 "clear" -> {
                                     terminalLines = listOf(
                                         TerminalLine("Aki Studio Terminal v1.0.0"),
@@ -149,7 +154,7 @@ fun TerminalScreen() {
                                     currentCommand = ""
                                     return@IconButton
                                 }
-                                else -> "Command not found: $currentCommand"
+                                else -> "Command not found: $currentCommand\nType 'help' for available commands"
                             }
                             
                             terminalLines = terminalLines + TerminalLine(output)
@@ -162,3 +167,4 @@ fun TerminalScreen() {
             }
         }
     }
+}
