@@ -8,14 +8,14 @@ Copy this checklist and mark files as you complete them!
 
 ```
 aki-studio/
-├── [ ] README.md
+├── [✅] README.md
 ├── [ ] LICENSE
 ├── [ ] CONTRIBUTING.md
 ├── [ ] SETUP_GUIDE.md
 ├── [ ] .gitignore
-├── [ ] gradle.properties
-├── [ ] settings.gradle.kts
-└── [ ] build.gradle.kts
+├── [] gradle.properties
+├── [✅] settings.gradle.kts
+└── [✅] build.gradle.kts
 ```
 
 ---
