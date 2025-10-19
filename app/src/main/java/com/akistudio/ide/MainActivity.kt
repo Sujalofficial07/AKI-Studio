@@ -16,24 +16,29 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         
         setContent {
-            var isDarkMode by remember { mutableStateOf(isSystemInDarkTheme()) }
-            var isEyeProtectionMode by remember { mutableStateOf(false) }
-            
-            AkiStudioTheme(
-                darkTheme = isDarkMode,
-                eyeProtectionMode = isEyeProtectionMode
-            ) {
-                Surface(
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    MainScreen(
-                        onThemeChange = { dark, eyeProtection ->
-                            isDarkMode = dark
-                            isEyeProtectionMode = eyeProtection
-                        }
-                    )
+            AkiStudioApp()
+        }
+    }
+}
+
+@Composable
+fun AkiStudioApp() {
+    var isDarkMode by remember { mutableStateOf(isSystemInDarkTheme()) }
+    var isEyeProtectionMode by remember { mutableStateOf(false) }
+    
+    AkiStudioTheme(
+        darkTheme = isDarkMode,
+        eyeProtectionMode = isEyeProtectionMode
+    ) {
+        Surface(
+            color = MaterialTheme.colorScheme.background
+        ) {
+            MainScreen(
+                onThemeChange = { dark, eyeProtection ->
+                    isDarkMode = dark
+                    isEyeProtectionMode = eyeProtection
                 }
-            }
+            )
         }
     }
 }
