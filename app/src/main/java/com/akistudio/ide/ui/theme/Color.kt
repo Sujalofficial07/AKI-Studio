@@ -2,7 +2,7 @@ package com.akistudio.ide.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Eye Protection Mode Colors (Warm, reduced blue light)
+// Eye Protection Mode Colors
 val EyeProtectionPrimary = Color(0xFFFFB74D)
 val EyeProtectionSecondary = Color(0xFFFF9800)
 val EyeProtectionTertiary = Color(0xFFFFA726)
