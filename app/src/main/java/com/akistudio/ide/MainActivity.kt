@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
 import com.akistudio.ide.ui.theme.AkiStudioTheme
 import com.akistudio.ide.ui.screens.MainScreen
 
