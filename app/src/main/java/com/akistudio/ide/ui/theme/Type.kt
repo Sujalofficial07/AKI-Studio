@@ -6,7 +6,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Set of Material typography styles optimized for code editing
 val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = FontFamily.Monospace,
