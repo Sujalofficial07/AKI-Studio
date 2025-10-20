@@ -3,16 +3,19 @@ package com.akistudio.ui;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -22,23 +25,52 @@ import com.akistudio.editor.EditorActivity;
 import com.akistudio.files.FileAdapter;
 import com.akistudio.files.FileManager;
 import com.akistudio.tasks.GradleTaskRunner;
-import com.akistudio.terminal.TerminalView;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * MainActivity serves as the main screen of AkiStudio.
  * It displays the file manager, terminal, and provides access to Gradle tasks.
+ * Includes modern permission handling for all Android versions.
  */
 public class MainActivity extends AppCompatActivity implements FileAdapter.OnFileClickListener {
-
-    private static final int STORAGE_PERMISSION_CODE = 101;
 
     private ActivityMainBinding binding;
     private FileManager fileManager;
     private FileAdapter fileAdapter;
     private GradleTaskRunner gradleTaskRunner;
+
+    // Modern ActivityResultLauncher for requesting MANAGE_EXTERNAL_STORAGE on Android 11+
+    private final ActivityResultLauncher<Intent> storagePermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if (Environment.isExternalStorageManager()) {
+                        // Permission granted
+                        initializeUI();
+                    } else {
+                        showPermissionDeniedToast();
+                    }
+                }
+            });
+
+    // Modern ActivityResultLauncher for requesting legacy storage permissions
+    private final ActivityResultLauncher<String[]> legacyStoragePermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), (Map<String, Boolean> isGranted) -> {
+                boolean granted = true;
+                for (Boolean value : isGranted.values()) {
+                    if (!value) {
+                        granted = false;
+                        break;
+                    }
+                }
+                if (granted) {
+                    initializeUI();
+                } else {
+                    showPermissionDeniedToast();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,33 +79,32 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
 
-        checkPermissions();
+        requestStoragePermissions();
     }
 
     /**
-     * Checks for necessary storage permissions. If not granted, it requests them.
-     * If granted, it initializes the UI.
+     * Checks and requests necessary storage permissions based on the Android version.
      */
-    private void checkPermissions() {
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
-                    STORAGE_PERMISSION_CODE);
-        } else {
-            initializeUI();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                initializeUI();
+    private void requestStoragePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Android 11 (R) or higher - requires MANAGE_EXTERNAL_STORAGE
+            if (!Environment.isExternalStorageManager()) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                storagePermissionLauncher.launch(intent);
             } else {
-                Toast.makeText(this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
-                binding.terminalView.appendText("Error: Storage permission is required to function.");
+                initializeUI();
+            }
+        } else {
+            // Android 10 (Q) or lower - requires READ/WRITE_EXTERNAL_STORAGE
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                legacyStoragePermissionLauncher.launch(new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                });
+            } else {
+                initializeUI();
             }
         }
     }
@@ -95,6 +126,11 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
         binding.terminalView.appendText("AkiStudio Initialized.\n");
         binding.terminalView.appendText("Project Root: " + projectRoot.getAbsolutePath() + "\n");
     }
+    
+    private void showPermissionDeniedToast() {
+        Toast.makeText(this, "Storage Permission is required for AkiStudio to function.", Toast.LENGTH_LONG).show();
+        binding.terminalView.appendText("Error: Storage permission denied. Please grant permission in App Settings and restart.");
+    }
 
     /**
      * Sets up the RecyclerView for the file manager.
@@ -105,7 +141,9 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
         List<File> files = fileManager.getFiles(directory);
         fileAdapter = new FileAdapter(files, this);
         binding.recyclerViewFiles.setAdapter(fileAdapter);
-        getSupportActionBar().setSubtitle(fileManager.getCurrentPath());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setSubtitle(fileManager.getCurrentPath());
+        }
     }
     
     /**
@@ -122,7 +160,9 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
             // Navigate into directory
             List<File> newFiles = fileManager.getFiles(file);
             fileAdapter.updateFiles(newFiles);
-            getSupportActionBar().setSubtitle(fileManager.getCurrentPath());
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setSubtitle(fileManager.getCurrentPath());
+            }
         } else {
             // Open file in editor
             Intent intent = new Intent(this, EditorActivity.class);
@@ -133,11 +173,13 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
 
     @Override
     public void onBackPressed() {
-        if (!fileManager.isAtRoot()) {
+        if (fileManager != null && !fileManager.isAtRoot()) {
             File parent = fileManager.navigateUp();
             if (parent != null) {
                 fileAdapter.updateFiles(fileManager.getFiles(parent));
-                getSupportActionBar().setSubtitle(fileManager.getCurrentPath());
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setSubtitle(fileManager.getCurrentPath());
+                }
             }
         } else {
             super.onBackPressed();
@@ -154,11 +196,13 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.action_run_build) {
+            if (gradleTaskRunner == null) return true;
             binding.terminalView.clear();
             binding.terminalView.appendText("> Executing 'gradle assembleDebug'...\n\n");
             gradleTaskRunner.runTask("assembleDebug");
             return true;
         } else if (itemId == R.id.action_clean_project) {
+            if (gradleTaskRunner == null) return true;
             binding.terminalView.clear();
             binding.terminalView.appendText("> Executing 'gradle clean'...\n\n");
             gradleTaskRunner.runTask("clean");
