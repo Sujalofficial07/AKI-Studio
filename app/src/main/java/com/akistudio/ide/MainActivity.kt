@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import com.akistudio.ide.ui.theme.AkiStudioTheme
@@ -19,11 +18,6 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         // Handle permission results
-        permissions.entries.forEach {
-            val permissionName = it.key
-            val isGranted = it.value
-            // You can handle each permission here if needed
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +50,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AkiStudioApp() {
-    var isDarkMode by remember { mutableStateOf(isSystemInDarkTheme()) }
+    var isDarkMode by remember { mutableStateOf(false) }
     var isEyeProtectionMode by remember { mutableStateOf(false) }
     
     AkiStudioTheme(
