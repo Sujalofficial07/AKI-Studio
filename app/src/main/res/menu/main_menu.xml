@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_run_build"
+        android:title="Run Build (assembleDebug)"
+        android:icon="@android:drawable/ic_media_play"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_clean_project"
+        android:title="Clean Project"
+        app:showAsAction="never" />
+</menu>
