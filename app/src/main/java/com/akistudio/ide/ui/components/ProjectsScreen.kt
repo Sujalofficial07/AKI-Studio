@@ -1,208 +1,100 @@
 package com.akistudio.ide.ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import java.text.SimpleDateFormat
-import java.util.*
 
-data class Project(
-    val name: String,
-    val path: String,
-    val lastModified: Date,
-    val type: String
-)
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProjectsScreen() {
-    var showCreateDialog by remember { mutableStateOf(false) }
-    var projects by remember {
-        mutableStateOf(
-            listOf(
-                Project("MyFirstApp", "/storage/emulated/0/AkiStudio/MyFirstApp", Date(), "Android App"),
-                Project("HelloWorld", "/storage/emulated/0/AkiStudio/HelloWorld", Date(), "Android App")
-            )
-        )
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                "My Projects",
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-            FloatingActionButton(
-                onClick = { showCreateDialog = true },
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(Icons.Default.Add, "Create Project")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (projects.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        Icons.Default.FolderOpen,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        "No projects yet",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        "Create your first Android project",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(projects) { project ->
-                    ProjectCard(project = project)
-                }
-            }
-        }
-    }
-
-    if (showCreateDialog) {
-        CreateProjectDialog(
-            onDismiss = { showCreateDialog = false },
-            onCreate = { name, type ->
-                projects = projects + Project(name, "/storage/emulated/0/AkiStudio/$name", Date(), type)
-                showCreateDialog = false
-            }
-        )
-    }
-}
-
-@Composable
-fun ProjectCard(project: Project) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { },
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Default.Folder,
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Column {
-                    Text(
-                        project.name,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        project.type,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(project.lastModified),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-            IconButton(onClick = { }) {
-                Icon(Icons.Default.MoreVert, "More options")
-            }
-        }
-    }
-}
-
-@Composable
-fun CreateProjectDialog(
+fun EnhancedCreateProjectDialog(
     onDismiss: () -> Unit,
-    onCreate: (String, String) -> Unit
+    onCreate: (ProjectConfig) -> Unit
 ) {
     var projectName by remember { mutableStateOf("") }
+    var packageName by remember { mutableStateOf("com.example.app") }
     var selectedTemplate by remember { mutableStateOf("Empty Activity") }
+    var selectedSDK by remember { mutableStateOf<SDKVersion?>(null) }
+    var minSDK by remember { mutableStateOf(24) }
+    var showSDKSelector by remember { mutableStateOf(false) }
+    var currentStep by remember { mutableStateOf(0) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Create New Project") },
-        text = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                OutlinedTextField(
-                    value = projectName,
-                    onValueChange = { projectName = it },
-                    label = { Text("Project Name") },
-                    modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(600.dp),
+        title = {
+            Column {
+                Text("Create New Project")
+                LinearProgressIndicator(
+                    progress = (currentStep + 1) / 4f,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
                 )
-
-                Text("Select Template:", style = MaterialTheme.typography.titleSmall)
-                
-                listOf("Empty Activity", "Basic Activity", "Bottom Navigation").forEach { template ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { selectedTemplate = template }
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = selectedTemplate == template,
-                            onClick = { selectedTemplate = template }
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(template)
-                    }
-                }
+            }
+        },
+        text = {
+            when (currentStep) {
+                0 -> ProjectInfoStep(
+                    projectName = projectName,
+                    onProjectNameChange = { projectName = it },
+                    packageName = packageName,
+                    onPackageNameChange = { packageName = it }
+                )
+                1 -> TemplateSelectionStep(
+                    selectedTemplate = selectedTemplate,
+                    onTemplateSelect = { selectedTemplate = it }
+                )
+                2 -> SDKSelectionStep(
+                    minSDK = minSDK,
+                    onMinSDKChange = { minSDK = it },
+                    targetSDK = selectedSDK,
+                    onTargetSDKClick = { showSDKSelector = true }
+                )
+                3 -> ProjectSummaryStep(
+                    projectName = projectName,
+                    packageName = packageName,
+                    template = selectedTemplate,
+                    minSDK = minSDK,
+                    targetSDK = selectedSDK
+                )
             }
         },
         confirmButton = {
-            Button(
-                onClick = { onCreate(projectName, selectedTemplate) },
-                enabled = projectName.isNotBlank()
-            ) {
-                Text("Create")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (currentStep > 0) {
+                    TextButton(onClick = { currentStep-- }) {
+                        Text("Back")
+                    }
+                }
+                Button(
+                    onClick = {
+                        if (currentStep < 3) {
+                            currentStep++
+                        } else {
+                            onCreate(
+                                ProjectConfig(
+                                    name = projectName,
+                                    packageName = packageName,
+                                    template = selectedTemplate,
+                                    minSDK = minSDK,
+                                    targetSDK = selectedSDK?.apiLevel ?: 35
+                                )
+                            )
+                        }
+                    },
+                    enabled = when (currentStep) {
+                        0 -> projectName.isNotBlank() && packageName.isNotBlank()
+                        else -> true
+                    }
+                ) {
+                    Text(if (currentStep < 3) "Next" else "Create")
+                }
             }
         },
         dismissButton = {
@@ -211,4 +103,173 @@ fun CreateProjectDialog(
             }
         }
     )
+
+    if (showSDKSelector) {
+        SDKSelectorDialog(
+            onDismiss = { showSDKSelector = false },
+            onSelect = { selectedSDK = it }
+        )
+    }
 }
+
+@Composable
+fun ProjectInfoStep(
+    projectName: String,
+    onProjectNameChange: (String) -> Unit,
+    packageName: String,
+    onPackageNameChange: (String) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Text("Step 1: Project Information", style = MaterialTheme.typography.titleMedium)
+        OutlinedTextField(
+            value = projectName,
+            onValueChange = onProjectNameChange,
+            label = { Text("Project Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = packageName,
+            onValueChange = onPackageNameChange,
+            label = { Text("Package Name") },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("com.example.app") }
+        )
+    }
+}
+
+@Composable
+fun TemplateSelectionStep(
+    selectedTemplate: String,
+    onTemplateSelect: (String) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text("Step 2: Select Template", style = MaterialTheme.typography.titleMedium)
+        listOf(
+            "Empty Activity" to "A blank activity with basic setup",
+            "Basic Activity" to "Activity with toolbar and FAB",
+            "Bottom Navigation" to "Activity with bottom navigation",
+            "Navigation Drawer" to "Activity with navigation drawer",
+            "Tabbed Activity" to "Activity with tabs"
+        ).forEach { (template, description) ->
+            TemplateCard(
+                name = template,
+                description = description,
+                isSelected = selectedTemplate == template,
+                onClick = { onTemplateSelect(template) }
+            )
+        }
+    }
+}
+
+@Composable
+fun SDKSelectionStep(
+    minSDK: Int,
+    onMinSDKChange: (Int) -> Unit,
+    targetSDK: SDKVersion?,
+    onTargetSDKClick: () -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Text("Step 3: SDK Selection", style = MaterialTheme.typography.titleMedium)
+        Text("Minimum SDK: API $minSDK")
+        Slider(
+            value = minSDK.toFloat(),
+            onValueChange = { onMinSDKChange(it.toInt()) },
+            valueRange = 21f..35f,
+            steps = 14
+        )
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onTargetSDKClick
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text("Target SDK")
+                    Text(
+                        text = targetSDK?.let { "API ${it.apiLevel} - Android ${it.version}" } ?: "Not selected",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                Icon(Icons.Default.ArrowForward, null)
+            }
+        }
+    }
+}
+
+@Composable
+fun ProjectSummaryStep(
+    projectName: String,
+    packageName: String,
+    template: String,
+    minSDK: Int,
+    targetSDK: SDKVersion?
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text("Step 4: Review & Create", style = MaterialTheme.typography.titleMedium)
+        SummaryItem("Project Name", projectName)
+        SummaryItem("Package", packageName)
+        SummaryItem("Template", template)
+        SummaryItem("Min SDK", "API $minSDK")
+        SummaryItem("Target SDK", targetSDK?.let { "API ${it.apiLevel}" } ?: "API 35")
+    }
+}
+
+@Composable
+fun TemplateCard(
+    name: String,
+    description: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onClick,
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSelected) 
+                MaterialTheme.colorScheme.primaryContainer 
+            else 
+                MaterialTheme.colorScheme.surface
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(name, style = MaterialTheme.typography.titleSmall)
+                Text(
+                    description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            if (isSelected) {
+                Icon(Icons.Default.Check, null, tint = MaterialTheme.colorScheme.primary)
+            }
+        }
+    }
+}
+
+@Composable
+fun SummaryItem(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value, style = MaterialTheme.typography.titleSmall)
+    }
+}
+
+data class ProjectConfig(
+    val name: String,
+    val packageName: String,
+    val template: String,
+    val minSDK: Int,
+    val targetSDK: Int
+)
