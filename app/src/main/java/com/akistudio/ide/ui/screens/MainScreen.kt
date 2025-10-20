@@ -60,6 +60,12 @@ fun MainScreen(
                     icon = { Icon(Icons.Default.Build, "Tools") },
                     label = { Text("Tools") }
                 )
+                NavigationBarItem(
+                    selected = currentScreen == Screen.FileManager,
+                    onClick = { currentScreen = Screen.FileManager },
+                    icon = { Icon(Icons.Default.FolderOpen, "Files") },
+                    label = { Text("Files") }
+                )
             }
         }
     ) { padding ->
@@ -69,6 +75,7 @@ fun MainScreen(
                 Screen.Editor -> EditorScreen()
                 Screen.Terminal -> TerminalScreen()
                 Screen.Tools -> ToolsScreen()
+                Screen.FileManager -> FileManagerScreen()
             }
         }
 
@@ -88,5 +95,5 @@ fun MainScreen(
 }
 
 enum class Screen {
-    Projects, Editor, Terminal, Tools
+    Projects, Editor, Terminal, Tools, FileManager
 }
