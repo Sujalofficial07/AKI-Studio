@@ -3,6 +3,7 @@ package com.akistudio.terminal;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.view.View; // <-- THIS IMPORT IS ADDED
 import android.widget.ScrollView;
 
 import androidx.appcompat.widget.AppCompatTextView;
@@ -44,7 +45,7 @@ public class TerminalView extends ScrollView {
     public void appendText(final String text) {
         post(() -> {
             textView.append(text);
-            fullScroll(View.FOCUS_DOWN);
+            fullScroll(View.FOCUS_DOWN); // This line now compiles correctly
         });
     }
 
