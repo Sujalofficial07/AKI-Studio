@@ -3,22 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!--
-        Permissions required for file access.
-        requestLegacyExternalStorage is needed for Android 10 (API 29) to allow
-        broad file system access with the older storage permissions.
-        For Android 11+ (API 30+), MANAGE_EXTERNAL_STORAGE might be required for
-        a true IDE experience, but that requires special user permission grants.
+        Permissions for file access.
+        MANAGE_EXTERNAL_STORAGE is required for Android 11 (R) and above
+        for broad file access, which an IDE needs.
     -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.INTERNET" />
 
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
