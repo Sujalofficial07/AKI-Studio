@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   These are the rules for Android's Auto Backup feature.
+   See https://developer.android.com/guide/topics/data/autobackup
+-->
+<full-backup-content>
+    <!--
+       This is a default backup configuration. To learn more about the syntax, see
+       https://developer.android.com/guide/topics/data/autobackup#XMLSyntax
+    -->
+    <include domain="sharedpref" path="."/>
+    <exclude domain="database" path="."/>
+</full-backup-content>
