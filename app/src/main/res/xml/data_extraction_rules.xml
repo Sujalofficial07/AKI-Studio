@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   These are the rules for Android's Data Extraction feature, used for device-to-device transfers.
+   See https://developer.android.com/guide/topics/data/data-extraction-rules
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <!--
+           All backed up data is re-downloaded when the user installs your app
+           on a new device. The default behavior is to back up all shared preferences.
+        -->
+        <include domain="sharedpref" />
+        <exclude domain="database" />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="sharedpref" />
+        <exclude domain="database" />
+    </device-transfer>
+</data-extraction-rules>
