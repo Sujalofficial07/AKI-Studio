@@ -1,32 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Material 3 Dark Theme with a Glowing Accent -->
+    <!-- Base Palette -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="off_white">#FFF7F7F8</color>
 
-    <!-- Core Palette -->
-    <color name="primary">#00BCD4</color> <!-- Cyan -->
-    <color name="onPrimary">#000000</color>
-    <color name="primaryContainer">#00363d</color>
-    <color name="onPrimaryContainer">#b2ebf2</color>
+    <!-- Material 3 Light Theme Palette (Blue) -->
+    <color name="blue_200">#FF90CAF9</color>
+    <color name="blue_500">#FF2196F3</color>
+    <color name="blue_700">#FF1976D2</color>
+    <color name="grey_600">#FF757575</color>
 
-    <color name="secondary">#4dd0e1</color>
-    <color name="onSecondary">#000000</color>
-    
-    <color name="background">#121212</color>
-    <color name="onBackground">#E0E0E0</color>
-    
-    <color name="surface">#1E1E1E</color>
-    <color name="onSurface">#FFFFFF</color>
-
-    <!-- UI Components -->
+    <!-- UI Components (Retained from Dark Theme for contrast) -->
     <color name="terminal_background">#0A0A0A</color>
     <color name="terminal_text">#00FF00</color> <!-- Classic Green Terminal -->
-
     <color name="editor_background">#1C1C27</color> <!-- Deep Blue/Purple -->
     <color name="editor_text">#F0F0F0</color>
     <color name="editor_hint">#606070</color>
 
-    <!-- Accents -->
-    <color name="glow_cyan">#00FFFF</color>
 </resources>
