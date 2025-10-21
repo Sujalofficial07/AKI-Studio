@@ -2,17 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!--
-        Permissions for file access.
-        MANAGE_EXTERNAL_STORAGE is required for Android 11 (R) and above
-        for broad file access, which an IDE needs.
-    -->
+    <!-- Permissions for file access -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.INTERNET" />
-
 
     <application
         android:allowBackup="true"
@@ -24,28 +19,29 @@
         android:requestLegacyExternalStorage="true"
         tools:targetApi="31">
 
-        <!-- Main UI Activity that serves as the project dashboard -->
+        <!-- Project List is now the LAUNCHER activity -->
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.ProjectListActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleTop">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- IDE/Workspace Activity -->
+        <activity
+            android:name=".ui.IdeActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- Code Editor Activity -->
         <activity
             android:name=".editor.EditorActivity"
             android:exported="false"
-            android:parentActivityName=".ui.MainActivity"
-            android:label="@string/title_activity_editor">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity" />
-        </activity>
+            android:parentActivityName=".ui.IdeActivity"
+            android:label="@string/title_activity_editor" />
 
     </application>
 
