@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_files"
+        android:icon="@drawable/ic_folder"
+        android:title="@string/title_files" />
+    <item
+        android:id="@+id/navigation_terminal"
+        android:icon="@drawable/ic_terminal"
+        android:title="@string/title_terminal" />
+    <item
+        android:id="@+id/navigation_tools"
+        android:icon="@drawable/ic_tools"
+        android:title="@string/title_tools" />
+</menu>
