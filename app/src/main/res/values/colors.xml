@@ -18,4 +18,7 @@
     <color name="editor_text">#F0F0F0</color>
     <color name="editor_hint">#606070</color>
 
+    <!-- Add this back for completeness -->
+    <color name="glow_cyan">#00FFFF</color>
+
 </resources>
