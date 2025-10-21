@@ -1,24 +1,23 @@
-package com.akistudio.files;
+package com.akistudio.adapters; // <-- THIS LINE IS CORRECTED
 
+import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.akistudio.R;
 import com.akistudio.databinding.FileListItemBinding;
-
+import com.akistudio.editor.EditorActivity;
 import java.io.File;
 import java.util.List;
 
 /**
  * Adapter for displaying files and directories in a RecyclerView.
+ * This now belongs in the 'adapters' package.
  */
 public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder> {
 
     private List<File> files;
-    private OnFileClickListener listener;
+    private final OnFileClickListener listener;
 
     public interface OnFileClickListener {
         void onFileClick(File file);
@@ -63,12 +62,21 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder
         public void bind(final File file, final OnFileClickListener listener) {
             binding.fileName.setText(file.getName());
             if (file.isDirectory()) {
-                binding.fileIcon.setImageResource(R.drawable.ic_folder);
+                binding.fileIcon.setImageResource(com.akistudio.R.drawable.ic_folder);
             } else {
-                binding.fileIcon.setImageResource(R.drawable.ic_file);
+                binding.fileIcon.setImageResource(com.akistudio.R.drawable.ic_file);
             }
 
-            itemView.setOnClickListener(v -> listener.onFileClick(file));
+            itemView.setOnClickListener(v -> {
+                if (file.isDirectory()) {
+                    listener.onFileClick(file);
+                } else {
+                    // Directly open the editor for files
+                    Intent intent = new Intent(itemView.getContext(), EditorActivity.class);
+                    intent.putExtra(EditorActivity.EXTRA_FILE_PATH, file.getAbsolutePath());
+                    itemView.getContext().startActivity(intent);
+                }
+            });
         }
     }
 }
