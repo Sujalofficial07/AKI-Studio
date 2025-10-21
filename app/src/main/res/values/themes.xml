@@ -17,4 +17,9 @@
     <item name="colorOnSurface">@color/black</item>
     <item name="colorOnSurfaceVariant">@color/grey_600</item>
   </style>
+
+  <!-- Add these back for completeness -->
+  <style name="Theme.AkiStudio.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+  <style name="Theme.AkiStudio.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>
