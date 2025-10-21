@@ -24,16 +24,18 @@ import com.akistudio.databinding.ActivityMainBinding;
 import com.akistudio.editor.EditorActivity;
 import com.akistudio.files.FileAdapter;
 import com.akistudio.files.FileManager;
+import com.akistudio.files.ProjectInitializer;
 import com.akistudio.tasks.GradleTaskRunner;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 /**
  * MainActivity serves as the main screen of AkiStudio.
- * It displays the file manager, terminal, and provides access to Gradle tasks.
- * Includes modern permission handling for all Android versions.
+ * It handles permissions, initializes a template project if one doesn't exist,
+ * displays the file manager, terminal, and provides access to Gradle tasks.
  */
 public class MainActivity extends AppCompatActivity implements FileAdapter.OnFileClickListener {
 
@@ -47,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     if (Environment.isExternalStorageManager()) {
-                        // Permission granted
                         initializeUI();
                     } else {
                         showPermissionDeniedToast();
@@ -111,12 +112,32 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
 
     /**
      * Initializes the user interface components after permissions are granted.
+     * This now includes logic to create a sample project from assets if one does not exist.
      */
     private void initializeUI() {
-        // Use a base project directory in public storage for easy access
         File projectRoot = new File(Environment.getExternalStorageDirectory(), "AkiStudioProjects/SampleProject");
-        if (!projectRoot.exists()) {
-            projectRoot.mkdirs();
+
+        // Check if the project exists by looking for a key file. If not, create it.
+        File settingsFile = new File(projectRoot, "settings.gradle");
+        if (!settingsFile.exists()) {
+            binding.terminalView.appendText("No project found. Creating new template project...\n");
+            try {
+                // To make a buildable project, we must also provide the gradlew executables.
+                // In this example, we assume they are part of the template assets.
+                // You would need to add `gradlew` and `gradlew.bat` to your assets folder.
+                ProjectInitializer.copyProjectTemplate(getAssets(), "project_template", projectRoot);
+
+                // IMPORTANT: Make the gradlew script executable
+                File gradlewScript = new File(projectRoot, "gradlew");
+                if(gradlewScript.exists()) {
+                    gradlewScript.setExecutable(true, false);
+                }
+
+                binding.terminalView.appendText("Template project created successfully at:\n" + projectRoot.getAbsolutePath() + "\n");
+            } catch (IOException e) {
+                binding.terminalView.appendText("FATAL ERROR: Could not create template project. " + e.getMessage() + "\n");
+                return; // Stop initialization if template fails
+            }
         }
 
         fileManager = new FileManager(projectRoot);
@@ -126,16 +147,12 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
         binding.terminalView.appendText("AkiStudio Initialized.\n");
         binding.terminalView.appendText("Project Root: " + projectRoot.getAbsolutePath() + "\n");
     }
-    
+
     private void showPermissionDeniedToast() {
         Toast.makeText(this, "Storage Permission is required for AkiStudio to function.", Toast.LENGTH_LONG).show();
         binding.terminalView.appendText("Error: Storage permission denied. Please grant permission in App Settings and restart.");
     }
 
-    /**
-     * Sets up the RecyclerView for the file manager.
-     * @param directory The root directory to display.
-     */
     private void setupRecyclerView(File directory) {
         binding.recyclerViewFiles.setLayoutManager(new LinearLayoutManager(this));
         List<File> files = fileManager.getFiles(directory);
@@ -145,11 +162,7 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
             getSupportActionBar().setSubtitle(fileManager.getCurrentPath());
         }
     }
-    
-    /**
-     * Sets up the Gradle task runner.
-     * @param projectRoot The root of the Gradle project.
-     */
+
     private void setupGradleRunner(File projectRoot) {
         gradleTaskRunner = new GradleTaskRunner(projectRoot, binding.terminalView);
     }
@@ -157,14 +170,12 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
     @Override
     public void onFileClick(File file) {
         if (file.isDirectory()) {
-            // Navigate into directory
             List<File> newFiles = fileManager.getFiles(file);
             fileAdapter.updateFiles(newFiles);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setSubtitle(fileManager.getCurrentPath());
             }
         } else {
-            // Open file in editor
             Intent intent = new Intent(this, EditorActivity.class);
             intent.putExtra(EditorActivity.EXTRA_FILE_PATH, file.getAbsolutePath());
             startActivity(intent);
@@ -194,17 +205,20 @@ public class MainActivity extends AppCompatActivity implements FileAdapter.OnFil
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (gradleTaskRunner == null) {
+            Toast.makeText(this, "Gradle runner not initialized.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
         int itemId = item.getItemId();
         if (itemId == R.id.action_run_build) {
-            if (gradleTaskRunner == null) return true;
             binding.terminalView.clear();
-            binding.terminalView.appendText("> Executing 'gradle assembleDebug'...\n\n");
+            binding.terminalView.appendText("> Executing './gradlew assembleDebug'...\n\n");
             gradleTaskRunner.runTask("assembleDebug");
             return true;
         } else if (itemId == R.id.action_clean_project) {
-            if (gradleTaskRunner == null) return true;
             binding.terminalView.clear();
-            binding.terminalView.appendText("> Executing 'gradle clean'...\n\n");
+            binding.terminalView.appendText("> Executing './gradlew clean'...\n\n");
             gradleTaskRunner.runTask("clean");
             return true;
         }
