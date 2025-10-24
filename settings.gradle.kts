@@ -12,12 +12,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
-
-    versionCatalogs {
-        create("aki") {
-            from(files("gradle/libs.versions.toml"))
-        }
-    }
 }
 
 rootProject.name = "AkiStudio"
