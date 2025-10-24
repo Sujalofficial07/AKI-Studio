@@ -5,6 +5,6 @@ plugins {
     alias(aki.plugins.hilt)
 }
 
-tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
+tasks.named<Delete>("clean") {
+    delete(layout.buildDirectory)
 }
