@@ -1,3 +1,5 @@
-tasks.named<Delete>("clean") {
+// No plugins block here
+
+tasks.register<Delete>("clean") {
     delete(layout.buildDirectory)
 }
