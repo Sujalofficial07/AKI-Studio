@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    id("com.android.application") version "8.2.2"
+    id("org.jetbrains.kotlin.android") version "1.9.10"
+    id("org.jetbrains.kotlin.kapt") version "1.9.10"
+    id("com.google.dagger.hilt.android") version "2.52"
 }
 
 android {
@@ -35,7 +35,6 @@ android {
 
     signingConfigs {
         create("release") {
-            // Populated by CI using gradle.properties or environment vars
             storeFile = file(System.getenv("SIGNING_STORE_FILE") ?: "keystore.jks")
             storePassword = System.getenv("SIGNING_STORE_PASSWORD")
             keyAlias = System.getenv("SIGNING_KEY_ALIAS")
@@ -48,7 +47,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = project.findProperty("composeCompilerVersion") as String
+        kotlinCompilerExtensionVersion = "1.5.4" // Match Compose BOM version
     }
 
     compileOptions {
@@ -58,9 +57,7 @@ android {
 
     kotlinOptions {
         jvmTarget = "21"
-        freeCompilerArgs += listOf(
-            "-Xcontext-receivers"
-        )
+        freeCompilerArgs += listOf("-Xcontext-receivers")
     }
 
     packaging {
@@ -78,12 +75,13 @@ dependencies {
     implementation(project(":feature_terminal"))
     implementation(project(":feature_builder"))
 
-    implementation(platform("androidx.compose:compose-bom:${project.findProperty("composeBom")}"))
+    implementation(platform("androidx.compose:compose-bom:2024.10.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.activity:activity-compose:1.9.3")
     implementation("androidx.navigation:navigation-compose:2.8.2")
+
     implementation("com.google.dagger:hilt-android:2.52")
     kapt("com.google.dagger:hilt-compiler:2.52")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
@@ -94,7 +92,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
-    // SAF & zip utilities
     implementation("net.lingala.zip4j:zip4j:2.11.5")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
