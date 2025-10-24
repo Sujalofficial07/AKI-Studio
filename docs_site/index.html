@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AkiStudio — Native Android IDE</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="glass navbar">
+    <div class="brand">AkiStudio</div>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="#download">Download</a>
+      <a href="#updates">Updates</a>
+      <a href="https://github.com/your-org/AkiStudio" target="_blank">GitHub</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Native Android IDE</h1>
+    <p>Compose • Material 3 • Neon Glow • On-device builds</p>
+    <a class="cta" href="#download">Get the APK</a>
+  </section>
+
+  <section id="features" class="section glass">
+    <h2>Features</h2>
+    <div class="grid">
+      <div class="card neon"><h3>Code Editor</h3><p>Syntax highlighting, tabs, minimap, themes.</p></div>
+      <div class="card neon"><h3>File Manager</h3><p>SAF operations, zip/unzip, templates.</p></div>
+      <div class="card neon"><h3>Terminal</h3><p>Gradle & git logs in real-time.</p></div>
+      <div class="card neon"><h3>Builder</h3><p>Detect, build, sign, export APK.</p></div>
+    </div>
+  </section>
+
+  <section id="screenshots" class="section">
+    <h2>Screenshots</h2>
+    <div class="gallery">
+      <img src="images/editor.png" alt="Editor" />
+      <img src="images/terminal.png" alt="Terminal" />
+      <img src="images/filemanager.png" alt="File Manager" />
+      <img src="images/builder.png" alt="Builder" />
+    </div>
+  </section>
+
+  <section id="download" class="section glass">
+    <h2>Download</h2>
+    <p>Latest pre-release APK is published on GitHub Releases.</p>
+    <a class="badge" href="https://github.com/your-org/AkiStudio/releases">Releases →</a>
+  </section>
+
+  <section id="updates" class="section">
+    <h2>Updates</h2>
+    <ul id="changelog"></ul>
+  </section>
+
+  <footer class="footer glass">
+    <p>© AkiStudio — Neon Glow UI, Glassmorphism, Eye-safe dark</p>
+  </footer>
+
+  <script>
+    // Simple Releases changelog pull
+    fetch('https://api.github.com/repos/your-org/AkiStudio/releases')
+      .then(r => r.json()).then(items => {
+        const ul = document.getElementById('changelog');
+        items.slice(0, 8).forEach(i => {
+          const li = document.createElement('li');
+          li.innerHTML = `<b>${i.name}</b> — ${new Date(i.published_at).toLocaleDateString()}<br>${i.body ?? ''}`;
+          ul.appendChild(li);
+        });
+      });
+  </script>
+</body>
+</html>
