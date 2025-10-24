@@ -1,8 +1,8 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.hilt)
+    alias(aki.plugins.android.application)
+    alias(aki.plugins.kotlin.android)
+    alias(aki.plugins.kotlin.kapt)
+    alias(aki.plugins.hilt)
 }
 
 tasks.register("clean", Delete::class) {
