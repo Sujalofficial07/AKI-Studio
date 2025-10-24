@@ -60,7 +60,6 @@
   </footer>
 
   <script>
-    // Simple Releases changelog pull
     fetch('https://api.github.com/repos/your-org/AkiStudio/releases')
       .then(r => r.json()).then(items => {
         const ul = document.getElementById('changelog');
