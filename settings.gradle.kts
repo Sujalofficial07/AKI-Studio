@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     }
 
     versionCatalogs {
-        create("libs") {
+        create("aki") {
             from(files("gradle/libs.versions.toml"))
         }
     }
