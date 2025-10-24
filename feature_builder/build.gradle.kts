@@ -25,6 +25,8 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:${project.findProperty("composeBom")}"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3")
+    implementation("com.google.dagger:hilt-android:2.52")
+    kapt("com.google.dagger:hilt-compiler:2.52")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
 
