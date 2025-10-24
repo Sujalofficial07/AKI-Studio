@@ -27,6 +27,8 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+    implementation("com.google.dagger:hilt-android:2.52")
+    kapt("com.google.dagger:hilt-compiler:2.52")
 
     // Coroutines for async process IO
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
