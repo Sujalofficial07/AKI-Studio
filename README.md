@@ -2,14 +2,14 @@
 
 <div align="center">
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/yourusername/AkiStudio/build.yml?style=for-the-badge&logo=github)
-![Latest Release](https://img.shields.io/github/v/release/yourusername/AkiStudio?style=for-the-badge&logo=android&color=00D9FF)
-![Downloads](https://img.shields.io/github/downloads/yourusername/AkiStudio/total?style=for-the-badge&color=BB86FC)
-![License](https://img.shields.io/github/license/yourusername/AkiStudio?style=for-the-badge)
+![Build Status](https://img.shields.io/github/actions/workflow/status/sujalofficial07/AKI-Studio/build.yml?style=for-the-badge&logo=github)
+![Latest Release](https://img.shields.io/github/v/release/sujalofficial07/AKI-Studio?style=for-the-badge&logo=android&color=00D9FF)
+![Downloads](https://img.shields.io/github/downloads/sujalofficial07/AKI-Studio/total?style=for-the-badge&color=BB86FC)
+![License](https://img.shields.io/github/license/sujalofficial07/AKI-Studio?style=for-the-badge)
 
 **A fully native Android IDE that runs entirely on your mobile device**
 
-[🌐 Website](https://yourusername.github.io/AkiStudio) • [📥 Download APK](https://github.com/yourusername/AkiStudio/releases/latest) • [📖 Documentation](https://github.com/yourusername/AkiStudio/wiki) • [💬 Community](https://github.com/yourusername/AkiStudio/discussions)
+[🌐 Website](https://sujalofficial07.github.io/AKI-Studio) • [📥 Download APK](https://github.com/sujalofficial07/AKI-Studio/releases/latest) • [📖 Documentation](https://github.com/sujalofficial07/AKI-Studio/wiki) • [💬 Community](https://github.com/sujalofficial07/AKI-Studio/discussions)
 
 </div>
 
@@ -189,10 +189,10 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 📞 Contact & Support
 
-- **Website**: [akistudio.dev](https://yourusername.github.io/AkiStudio)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/AkiStudio/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/AkiStudio/discussions)
-- **Email**: support@akistudio.dev
+- **Website**: [akistudio.dev](https://Sujalofficial07.github.io/AKI-Studio)
+- **Issues**: [GitHub Issues](https://github.com/sujalofficial07/AKI-Studio/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/sujalofficial07/AKI-Studio/discussions)
+- **Email**: soon
 
 ---
 
