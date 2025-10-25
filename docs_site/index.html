@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AkiStudio - Android IDE for Mobile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00d9ff;
+            border-radius: 50%;
+            animation: float 20s infinite;
+            box-shadow: 0 0 10px #00d9ff, 0 0 20px #00d9ff;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(13, 27, 42, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00d9ff, #bb86fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #a0aec0;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            color: #00d9ff;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 72px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #00d9ff, #bb86fc, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.5)); }
+            to { filter: drop-shadow(0 0 40px rgba(187, 134, 252, 0.8)); }
+        }
+
+        .hero-content p {
+            font-size: 24px;
+            color: #a0aec0;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00d9ff, #0099cc);
+            color: #000;
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 50px rgba(0, 217, 255, 0.8);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #00d9ff;
+            border: 2px solid #00d9ff;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 217, 255, 0.1);
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.4);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 60px;
+            color: #00d9ff;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .feature-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00d9ff, #bb86fc, #ff006e);
+            border-radius: 20px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover::before {
+            opacity: 0.5;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #00d9ff;
+        }
+
+        .feature-card p {
+            color: #a0aec0;
+            line-height: 1.6;
+        }
+
+        /* Screenshots Section */
+        .screenshots {
+            padding: 100px 20px;
+            background: rgba(10, 14, 39, 0.5);
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .screenshot {
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(0, 217, 255, 0.3);
+            transition: all 0.3s;
+            background: #1a1a2e;
+            aspect-ratio: 9/16;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00d9ff;
+            font-size: 18px;
+        }
+
+        .screenshot:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 217, 255, 0.5);
+        }
+
+        /* Download Section */
+        .download {
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid #00d9ff;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-bottom: 30px;
+            color: #00d9ff;
+        }
+
+        .download-stats {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #00d9ff;
+            display: block;
+        }
+
+        .stat-label {
+            color: #a0aec0;
+            margin-top: 5px;
+        }
+
+        /* Changelog Section */
+        .changelog {
+            padding: 100px 20px;
+            background: rgba(10, 14, 39, 0.5);
+        }
+
+        .changelog-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .changelog-item {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00d9ff;
+        }
+
+        .changelog-version {
+            font-size: 24px;
+            color: #00d9ff;
+            margin-bottom: 10px;
+        }
+
+        .changelog-date {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .changelog-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .changelog-item li {
+            padding: 8px 0;
+            color: #a0aec0;
+        }
+
+        .changelog-item li::before {
+            content: "▹ ";
+            color: #00d9ff;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 14, 39, 0.9);
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(0, 217, 255, 0.2);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #00d9ff;
+        }
+
+        .copyright {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 48px;
+            }
+
+            .hero-content p {
+                font-size: 18px;
+            }
+
+            nav {
+                padding: 15px 20px;
+            }
+
+            nav ul {
+                gap: 15px;
+                font-size: 14px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">⚡ AkiStudio</div>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#screenshots">Screenshots</a></li>
+                <li><a href="#download">Download</a></li>
+                <li><a href="#changelog">Updates</a></li>
+                <li><a href="https://github.com/yourusername/AkiStudio" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>AkiStudio</h1>
+            <p>The ultimate native Android IDE that runs entirely on your mobile device. Code, build, and deploy apps on the go.</p>
+            <div class="cta-buttons">
+                <a href="#download" class="btn btn-primary">Download APK</a>
+                <a href="https://github.com/yourusername/AkiStudio" class="btn btn-secondary" target="_blank">View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Powerful Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">💻</div>
+                <h3>Advanced Code Editor</h3>
+                <p>Syntax highlighting for Kotlin, XML, JSON with auto-indent, line numbers, and AI-powered suggestions.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📁</div>
+                <h3>Smart File Manager</h3>
+                <p>Complete project management with GitHub integration, templates, and scoped storage support.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3>Terminal Emulator</h3>
+                <p>Full Linux-style terminal with Gradle commands, Git CLI, and real-time build logs.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔨</div>
+                <h3>APK Builder</h3>
+                <p>Auto-detect Gradle projects, build, sign, and export APK files directly on your device.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Neon UI Design</h3>
+                <p>Eye-safe dark theme with Material 3, glassmorphism, and smooth animations.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔌</div>
+                <h3>Plugin System</h3>
+                <p>Extensible architecture with support for language servers and custom themes.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="screenshots" id="screenshots">
+        <h2 class="section-title">Screenshots</h2>
+        <div class="screenshots-grid">
+            <div class="screenshot">Editor View</div>
+            <div class="screenshot">File Manager</div>
+            <div class="screenshot">Terminal</div>
+            <div class="screenshot">Build Output</div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download" id="download">
+        <h2 class="section-title">Download AkiStudio</h2>
+        <div class="version-badge">Latest Version: v1.0.0</div>
+        <div class="cta-buttons">
+            <a href="https://github.com/yourusername/AkiStudio/releases/latest/download/akistudio-release.apk" class="btn btn-primary">Download APK (ARM64)</a>
+            <a href="https://github.com/yourusername/AkiStudio/releases" class="btn btn-secondary" target="_blank">All Releases</a>
+        </div>
+        
+        <div class="download-stats">
+            <div class="stat">
+                <span class="stat-number">10K+</span>
+                <span class="stat-label">Downloads</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">4.8★</span>
+                <span class="stat-label">Rating</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">24 MB</span>
+                <span class="stat-label">Size</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Changelog Section -->
+    <section class="changelog" id="changelog">
+        <h2 class="section-title">Changelog</h2>
+        <div class="changelog-container">
+            <div class="changelog-item">
+                <div class="changelog-version">Version 1.0.0</div>
+                <div class="changelog-date">October 24, 2025</div>
+                <ul>
+                    <li>Initial release with core IDE features</li>
+                    <li>Code editor with syntax highlighting</li>
+                    <li>File manager with GitHub integration</li>
+                    <li>Terminal emulator with Gradle support</li>
+                    <li>APK builder and signer</li>
+                    <li>Material 3 neon-themed UI</li>
+                </ul>
+            </div>
+            
+            <div class="changelog-item">
+                <div class="changelog-version">Version 0.9.0 Beta</div>
+                <div class="changelog-date">October 10, 2025</div>
+                <ul>
+                    <li>Beta testing phase</li>
+                    <li>Bug fixes and performance improvements</li>
+                    <li>Added theme customization</li>
+                    <li>Improved build system stability</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="https://github.com/yourusername/AkiStudio" target="_blank">GitHub</a>
+            <a href="https://github.com/yourusername/AkiStudio/issues" target="_blank">Report Bug</a>
+            <a href="https://github.com/yourusername/AkiStudio/discussions" target="_blank">Community</a>
+            <a href="https://github.com/yourusername/AkiStudio/wiki" target="_blank">Documentation</a>
+        </div>
+        <div class="copyright">
+            © 2025 AkiStudio. Open Source Project. Built with ⚡ by the community.
+        </div>
+    </footer>
+
+    <script>
+        // Generate animated particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+</body>
+          </html>
